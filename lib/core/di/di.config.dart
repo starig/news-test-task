@@ -13,14 +13,13 @@ import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:news_test_task/core/di/core_module.dart' as _i690;
+import 'package:news_test_task/data/database/app_database.dart' as _i590;
 import 'package:news_test_task/data/news/dao/favorite_articles_dao.dart'
     as _i431;
+import 'package:news_test_task/data/news/data_sources/news_local_data_source.dart'
+    as _i826;
 import 'package:news_test_task/data/news/data_sources/news_remote_data_source.dart'
     as _i937;
-import 'package:news_test_task/data/news/local_data_source/news_local_data_source.dart'
-    as _i929;
-import 'package:news_test_task/data/news/local_data_source/news_local_database.dart'
-    as _i1052;
 import 'package:news_test_task/domain/news/repository/news_repository.dart'
     as _i1008;
 import 'package:news_test_task/domain/news/use_cases/add_favorite_article_use_case.dart'
@@ -45,20 +44,18 @@ extension GetItInjectableX on _i174.GetIt {
     final coreModule = _$CoreModule();
     gh.factory<_i690.DioFactory>(() => _i690.DioFactory());
     gh.factory<_i937.NewsRemoteDataSource>(() => _i937.NewsRemoteDataSource());
-    gh.lazySingleton<_i1052.NewsLocalDatabase>(
-      () => _i1052.NewsLocalDatabase(),
+    gh.lazySingleton<_i590.AppDatabase>(() => _i590.AppDatabase());
+    gh.lazySingleton<_i431.FavoriteArticlesDao>(
+      () => _i431.FavoriteArticlesDao(gh<_i590.AppDatabase>()),
+    );
+    gh.factory<_i826.NewsLocalDataSource>(
+      () => _i826.NewsLocalDataSource(gh<_i431.FavoriteArticlesDao>()),
     );
     gh.lazySingleton<_i361.Dio>(() => coreModule.dio(gh<_i690.DioFactory>()));
-    gh.lazySingleton<_i431.FavoriteArticlesDao>(
-      () => _i431.FavoriteArticlesDao(gh<_i1052.NewsLocalDatabase>()),
-    );
-    gh.factory<_i929.NewsLocalDataSource>(
-      () => _i929.NewsLocalDataSource(gh<_i431.FavoriteArticlesDao>()),
-    );
     gh.factory<_i1008.NewsRepository>(
       () => _i1008.NewsRepository(
         gh<_i937.NewsRemoteDataSource>(),
-        gh<_i929.NewsLocalDataSource>(),
+        gh<_i826.NewsLocalDataSource>(),
       ),
     );
     gh.factory<_i198.AddFavoriteArticleUseCase>(

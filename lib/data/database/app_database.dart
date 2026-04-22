@@ -7,15 +7,15 @@ import 'package:news_test_task/data/news/dao/favorite_articles_dao.dart';
 import 'package:news_test_task/data/news/tables/favorite_articles_table.dart';
 import 'package:path_provider/path_provider.dart';
 
-part 'news_local_database.g.dart';
+part 'app_database.g.dart';
 
 @lazySingleton
 @DriftDatabase(
   tables: [FavoriteArticlesTable],
   daos: [FavoriteArticlesDao],
 )
-class NewsLocalDatabase extends _$NewsLocalDatabase {
-  NewsLocalDatabase() : super(_openConnection());
+class AppDatabase extends _$AppDatabase {
+  AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -24,7 +24,7 @@ class NewsLocalDatabase extends _$NewsLocalDatabase {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/news_local_database.sqlite');
+    final file = File('${directory.path}/app_database.sqlite');
     return NativeDatabase.createInBackground(file);
   });
 }

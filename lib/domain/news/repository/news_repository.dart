@@ -1,6 +1,6 @@
 import 'package:injectable/injectable.dart';
-import 'package:news_test_task/data/news/local_data_source/news_local_data_source.dart';
 import 'package:news_test_task/data/news/data_sources/news_remote_data_source.dart';
+import 'package:news_test_task/data/news/data_sources/news_local_data_source.dart';
 import 'package:news_test_task/domain/news/entities/article_entity.dart';
 import 'package:news_test_task/domain/news/entities/top_headlines_entity.dart';
 

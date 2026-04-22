@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:injectable/injectable.dart';
-import 'package:news_test_task/data/news/local_data_source/news_local_database.dart';
+import 'package:news_test_task/data/database/app_database.dart';
 import 'package:news_test_task/data/news/tables/favorite_articles_table.dart';
 import 'package:news_test_task/domain/news/entities/article_entity.dart';
 
@@ -8,7 +8,7 @@ part 'favorite_articles_dao.g.dart';
 
 @DriftAccessor(tables: [FavoriteArticlesTable])
 @lazySingleton
-class FavoriteArticlesDao extends DatabaseAccessor<NewsLocalDatabase> with _$FavoriteArticlesDaoMixin {
+class FavoriteArticlesDao extends DatabaseAccessor<AppDatabase> with _$FavoriteArticlesDaoMixin {
   FavoriteArticlesDao(super.db);
 
   Future<void> addFavoriteArticle(ArticleEntity article) async {

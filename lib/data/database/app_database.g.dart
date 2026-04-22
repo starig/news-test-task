@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'news_local_database.dart';
+part of 'app_database.dart';
 
 // ignore_for_file: type=lint
 class $FavoriteArticlesTableTable extends FavoriteArticlesTable
@@ -592,13 +592,13 @@ class FavoriteArticlesTableCompanion
   }
 }
 
-abstract class _$NewsLocalDatabase extends GeneratedDatabase {
-  _$NewsLocalDatabase(QueryExecutor e) : super(e);
-  $NewsLocalDatabaseManager get managers => $NewsLocalDatabaseManager(this);
+abstract class _$AppDatabase extends GeneratedDatabase {
+  _$AppDatabase(QueryExecutor e) : super(e);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $FavoriteArticlesTableTable favoriteArticlesTable =
       $FavoriteArticlesTableTable(this);
   late final FavoriteArticlesDao favoriteArticlesDao = FavoriteArticlesDao(
-    this as NewsLocalDatabase,
+    this as AppDatabase,
   );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -635,7 +635,7 @@ typedef $$FavoriteArticlesTableTableUpdateCompanionBuilder =
     });
 
 class $$FavoriteArticlesTableTableFilterComposer
-    extends Composer<_$NewsLocalDatabase, $FavoriteArticlesTableTable> {
+    extends Composer<_$AppDatabase, $FavoriteArticlesTableTable> {
   $$FavoriteArticlesTableTableFilterComposer({
     required super.$db,
     required super.$table,
@@ -690,7 +690,7 @@ class $$FavoriteArticlesTableTableFilterComposer
 }
 
 class $$FavoriteArticlesTableTableOrderingComposer
-    extends Composer<_$NewsLocalDatabase, $FavoriteArticlesTableTable> {
+    extends Composer<_$AppDatabase, $FavoriteArticlesTableTable> {
   $$FavoriteArticlesTableTableOrderingComposer({
     required super.$db,
     required super.$table,
@@ -745,7 +745,7 @@ class $$FavoriteArticlesTableTableOrderingComposer
 }
 
 class $$FavoriteArticlesTableTableAnnotationComposer
-    extends Composer<_$NewsLocalDatabase, $FavoriteArticlesTableTable> {
+    extends Composer<_$AppDatabase, $FavoriteArticlesTableTable> {
   $$FavoriteArticlesTableTableAnnotationComposer({
     required super.$db,
     required super.$table,
@@ -792,7 +792,7 @@ class $$FavoriteArticlesTableTableAnnotationComposer
 class $$FavoriteArticlesTableTableTableManager
     extends
         RootTableManager<
-          _$NewsLocalDatabase,
+          _$AppDatabase,
           $FavoriteArticlesTableTable,
           FavoriteArticlesTableData,
           $$FavoriteArticlesTableTableFilterComposer,
@@ -803,7 +803,7 @@ class $$FavoriteArticlesTableTableTableManager
           (
             FavoriteArticlesTableData,
             BaseReferences<
-              _$NewsLocalDatabase,
+              _$AppDatabase,
               $FavoriteArticlesTableTable,
               FavoriteArticlesTableData
             >,
@@ -812,7 +812,7 @@ class $$FavoriteArticlesTableTableTableManager
           PrefetchHooks Function()
         > {
   $$FavoriteArticlesTableTableTableManager(
-    _$NewsLocalDatabase db,
+    _$AppDatabase db,
     $FavoriteArticlesTableTable table,
   ) : super(
         TableManagerState(
@@ -891,7 +891,7 @@ class $$FavoriteArticlesTableTableTableManager
 
 typedef $$FavoriteArticlesTableTableProcessedTableManager =
     ProcessedTableManager<
-      _$NewsLocalDatabase,
+      _$AppDatabase,
       $FavoriteArticlesTableTable,
       FavoriteArticlesTableData,
       $$FavoriteArticlesTableTableFilterComposer,
@@ -902,7 +902,7 @@ typedef $$FavoriteArticlesTableTableProcessedTableManager =
       (
         FavoriteArticlesTableData,
         BaseReferences<
-          _$NewsLocalDatabase,
+          _$AppDatabase,
           $FavoriteArticlesTableTable,
           FavoriteArticlesTableData
         >,
@@ -911,9 +911,9 @@ typedef $$FavoriteArticlesTableTableProcessedTableManager =
       PrefetchHooks Function()
     >;
 
-class $NewsLocalDatabaseManager {
-  final _$NewsLocalDatabase _db;
-  $NewsLocalDatabaseManager(this._db);
+class $AppDatabaseManager {
+  final _$AppDatabase _db;
+  $AppDatabaseManager(this._db);
   $$FavoriteArticlesTableTableTableManager get favoriteArticlesTable =>
       $$FavoriteArticlesTableTableTableManager(_db, _db.favoriteArticlesTable);
 }

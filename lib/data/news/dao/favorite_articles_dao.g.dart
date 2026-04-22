@@ -3,7 +3,7 @@
 part of 'favorite_articles_dao.dart';
 
 // ignore_for_file: type=lint
-mixin _$FavoriteArticlesDaoMixin on DatabaseAccessor<NewsLocalDatabase> {
+mixin _$FavoriteArticlesDaoMixin on DatabaseAccessor<AppDatabase> {
   $FavoriteArticlesTableTable get favoriteArticlesTable =>
       attachedDatabase.favoriteArticlesTable;
   FavoriteArticlesDaoManager get managers => FavoriteArticlesDaoManager(this);
