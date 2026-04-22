@@ -19,6 +19,8 @@ class FavoriteArticlesCubit extends Cubit<FavoriteArticlesState> {
   ) : super(
         FavoriteArticlesState(
           favoriteArticles: [],
+          errorMessage: null,
+          errorEventId: 0,
         ),
       );
 
@@ -29,8 +31,19 @@ class FavoriteArticlesCubit extends Cubit<FavoriteArticlesState> {
   Future<void> getFavoriteArticles() async {
     try {
       final favoriteArticles = await _getFavoriteArticlesUseCase();
-      emit(state.copyWith(favoriteArticles: favoriteArticles));
+      emit(
+        state.copyWith(
+          favoriteArticles: favoriteArticles,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
+      emit(
+        state.copyWith(
+          errorMessage: 'Failed to load favorite articles. Please try again.',
+          errorEventId: state.errorEventId + 1,
+        ),
+      );
       if (kDebugMode) {
         inspect(e);
       }
@@ -40,10 +53,25 @@ class FavoriteArticlesCubit extends Cubit<FavoriteArticlesState> {
   Future<void> addFavoriteArticle(ArticleEntity article) async {
     try {
       await _addFavoriteArticleUseCase(article);
+      final alreadyInFavorites = state.favoriteArticlesUrls.contains(article.url);
+      if (alreadyInFavorites) return;
       final updatedFavorites = [...state.favoriteArticles, article];
-      emit(state.copyWith(favoriteArticles: updatedFavorites));
+      emit(
+        state.copyWith(
+          favoriteArticles: updatedFavorites,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
-      rethrow;
+      emit(
+        state.copyWith(
+          errorMessage: 'Failed to add article to favorites. Please try again.',
+          errorEventId: state.errorEventId + 1,
+        ),
+      );
+      if (kDebugMode) {
+        inspect(e);
+      }
     }
   }
 
@@ -51,9 +79,22 @@ class FavoriteArticlesCubit extends Cubit<FavoriteArticlesState> {
     try {
       await _removeFavoriteArticleUseCase(url);
       final updatedFavorites = state.favoriteArticles.where((element) => element.url != url).toList();
-      emit(state.copyWith(favoriteArticles: updatedFavorites));
+      emit(
+        state.copyWith(
+          favoriteArticles: updatedFavorites,
+          errorMessage: null,
+        ),
+      );
     } catch (e) {
-      rethrow;
+      emit(
+        state.copyWith(
+          errorMessage: 'Failed to remove article from favorites. Please try again.',
+          errorEventId: state.errorEventId + 1,
+        ),
+      );
+      if (kDebugMode) {
+        inspect(e);
+      }
     }
   }
 }

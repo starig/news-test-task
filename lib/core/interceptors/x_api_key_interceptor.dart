@@ -7,7 +7,6 @@ class XApiKeyInterceptor extends Interceptor {
   Future<Map<String, String>> _buildHeaders() async {
     final xApiKey = AppConstants.xApiKey;
 
-    print(xApiKey);
     return <String, String>{
       'X-Api-Key': xApiKey,
     };

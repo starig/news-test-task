@@ -23,6 +23,8 @@ class NewsCubit extends Cubit<NewsState> {
           articles: [],
           selectedCategory: null,
           searchQuery: '',
+          errorMessage: null,
+          errorEventId: 0,
         ),
       );
 
@@ -38,6 +40,7 @@ class NewsCubit extends Cubit<NewsState> {
         isLoadingMore: false,
         hasMore: true,
         page: 1,
+        errorMessage: null,
       ),
     );
 
@@ -58,11 +61,18 @@ class NewsCubit extends Cubit<NewsState> {
           articles: response.articles,
           hasMore: hasMore,
           page: 1,
+          errorMessage: null,
         ),
       );
     } catch (e) {
       if (requestId != _latestTopHeadlinesRequestId) return;
-      emit(state.copyWith(isLoading: false));
+      emit(
+        state.copyWith(
+          isLoading: false,
+          errorMessage: 'Failed to load top headlines. Please try again.',
+          errorEventId: state.errorEventId + 1,
+        ),
+      );
       if (kDebugMode) {
         inspect(e);
       }
@@ -72,7 +82,12 @@ class NewsCubit extends Cubit<NewsState> {
   Future<void> loadMoreTopHeadlines() async {
     if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
 
-    emit(state.copyWith(isLoadingMore: true));
+    emit(
+      state.copyWith(
+        isLoadingMore: true,
+        errorMessage: null,
+      ),
+    );
 
     final nextPage = state.page + 1;
     try {
@@ -92,10 +107,17 @@ class NewsCubit extends Cubit<NewsState> {
           articles: mergedArticles,
           page: nextPage,
           hasMore: hasMore,
+          errorMessage: null,
         ),
       );
     } catch (e) {
-      emit(state.copyWith(isLoadingMore: false));
+      emit(
+        state.copyWith(
+          isLoadingMore: false,
+          errorMessage: 'Failed to load top headlines. Please try again.',
+          errorEventId: state.errorEventId + 1,
+        ),
+      );
       if (kDebugMode) {
         inspect(e);
       }

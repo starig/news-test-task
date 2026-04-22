@@ -1,17 +1,41 @@
-# news_test_task
+# News Test Task
 
-A new Flutter project.
+Flutter-приложение для просмотра новостей (NewsAPI) с экранами:
+- список новостей;
+- детали новости;
+- избранные новости.
 
-## Getting Started
+## Запуск проекта
 
-This project is a starting point for a Flutter application.
+1. Установите зависимости:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+2. Создайте файл `env.json` в корне проекта:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```json
+{
+  "x_api_key": "YOUR_NEWSAPI_KEY"
+}
+```
+
+3. Запустите приложение:
+
+```bash
+flutter run --dart-define-from-file=env.json
+```
+
+Примечание: `x_api_key` используется в заголовке `X-Api-Key` для запросов к [NewsAPI](https://newsapi.org/).
+
+## Архитектура
+
+Проект разделен на 3 слоя:
+
+- `data`:
+  работа с источниками данных (API и локальная БД `drift`), `dto`, `dao`, `data_source`.
+- `domain`:
+  бизнес-сущности (`entities`), `use_case`, `repository`.
+- `features`:
+  UI-модули по фичам/экранам; каждый модуль содержит `bloc` (состояние и события) и `view` (UI).

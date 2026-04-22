@@ -3,6 +3,7 @@ part of 'news_cubit.dart';
 @immutable
 class NewsState {
   static const Object _selectedCategorySentinel = Object();
+  static const Object _errorMessageSentinel = Object();
 
   final bool isLoading;
   final bool isLoadingMore;
@@ -11,6 +12,8 @@ class NewsState {
   final List<ArticleEntity> articles;
   final CategoryEnum? selectedCategory;
   final String searchQuery;
+  final String? errorMessage;
+  final int errorEventId;
 
   const NewsState({
     required this.isLoading,
@@ -20,6 +23,8 @@ class NewsState {
     required this.articles,
     required this.selectedCategory,
     required this.searchQuery,
+    required this.errorMessage,
+    required this.errorEventId,
   });
 
   NewsState copyWith({
@@ -28,9 +33,10 @@ class NewsState {
     bool? hasMore,
     int? page,
     List<ArticleEntity>? articles,
-    List<String>? favoriteArticlesUrls,
     Object? selectedCategory = _selectedCategorySentinel,
     String? searchQuery,
+    Object? errorMessage = _errorMessageSentinel,
+    int? errorEventId,
   }) {
     return NewsState(
       isLoading: isLoading ?? this.isLoading,
@@ -42,6 +48,8 @@ class NewsState {
           ? this.selectedCategory
           : selectedCategory as CategoryEnum?,
       searchQuery: searchQuery ?? this.searchQuery,
+      errorMessage: identical(errorMessage, _errorMessageSentinel) ? this.errorMessage : errorMessage as String?,
+      errorEventId: errorEventId ?? this.errorEventId,
     );
   }
 }
