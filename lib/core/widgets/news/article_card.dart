@@ -112,7 +112,7 @@ class ArticleCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      article.publishedAt,
+                      article.displayTime,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontSize: 17,
                       ),

@@ -14,8 +14,10 @@ class NewsCubit extends Cubit<NewsState> {
   NewsCubit(this._getTopHeadlinesUseCase)
     : super(
         NewsState(
+          isLoading: false,
           isLoadingMore: false,
-          page: 0,
+          hasMore: true,
+          page: 1,
           articles: [],
         ),
       );
@@ -23,11 +25,60 @@ class NewsCubit extends Cubit<NewsState> {
   final GetTopHeadlinesUseCase _getTopHeadlinesUseCase;
 
   Future<void> getTopHeadlines() async {
+    if (state.isLoading) return;
+
+    emit(
+      state.copyWith(
+        isLoading: true,
+        isLoadingMore: false,
+        hasMore: true,
+        page: 1,
+      ),
+    );
+
     try {
-      final body = TopHeadlinesRequestEntity();
+      final body = TopHeadlinesRequestEntity(page: 1);
       final response = await _getTopHeadlinesUseCase(body);
-      emit(state.copyWith(articles: response.articles));
+      final hasMore = response.articles.length < response.totalResults && response.articles.isNotEmpty;
+
+      emit(
+        state.copyWith(
+          isLoading: false,
+          articles: response.articles,
+          hasMore: hasMore,
+        ),
+      );
     } catch (e) {
+      emit(state.copyWith(isLoading: false));
+      if (kDebugMode) {
+        inspect(e);
+      }
+    }
+  }
+
+  Future<void> loadMoreTopHeadlines() async {
+    if (state.isLoading || state.isLoadingMore || !state.hasMore) return;
+
+    emit(state.copyWith(isLoadingMore: true));
+
+    final nextPage = state.page + 1;
+    try {
+      final body = TopHeadlinesRequestEntity(page: nextPage);
+      final response = await _getTopHeadlinesUseCase(body);
+
+      final mergedArticles = [...state.articles, ...response.articles];
+      final hasMore = mergedArticles.length < response.totalResults && response.articles.isNotEmpty;
+
+      emit(
+        state.copyWith(
+          isLoadingMore: false,
+          articles: mergedArticles,
+          page: nextPage,
+          hasMore: hasMore,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(isLoadingMore: false));
       if (kDebugMode) {
         inspect(e);
       }

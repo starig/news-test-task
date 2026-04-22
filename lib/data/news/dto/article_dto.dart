@@ -18,7 +18,7 @@ class ArticleDto {
   @JsonKey(name: "publishedAt")
   final String publishedAt;
   @JsonKey(name: "content")
-  final String content;
+  final String? content;
 
   ArticleDto({
     required this.source,
@@ -27,7 +27,7 @@ class ArticleDto {
     required this.description,
     required this.urlToImage,
     required this.publishedAt,
-    required this.content,
+    this.content,
   });
 
   factory ArticleDto.fromJson(Map<String, dynamic> json) => _$ArticleDtoFromJson(json);

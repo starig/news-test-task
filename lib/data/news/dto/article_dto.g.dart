@@ -13,7 +13,7 @@ ArticleDto _$ArticleDtoFromJson(Map<String, dynamic> json) => ArticleDto(
   description: json['description'] as String,
   urlToImage: json['urlToImage'] as String,
   publishedAt: json['publishedAt'] as String,
-  content: json['content'] as String,
+  content: json['content'] as String?,
 );
 
 SourceDto _$SourceDtoFromJson(Map<String, dynamic> json) =>

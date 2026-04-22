@@ -5,7 +5,7 @@ class ArticleEntity {
   final String description;
   final String urlToImage;
   final String publishedAt;
-  final String content;
+  final String? content;
 
   ArticleEntity({
     required this.source,
@@ -14,8 +14,19 @@ class ArticleEntity {
     required this.description,
     required this.urlToImage,
     required this.publishedAt,
-    required this.content,
+    this.content,
   });
+
+  String get displayTime {
+    final date = DateTime.tryParse(publishedAt);
+    if (date == null) return publishedAt;
+
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    final year = date.year.toString();
+
+    return '$month.$day.$year';
+  }
 }
 
 class SourceEntity {
