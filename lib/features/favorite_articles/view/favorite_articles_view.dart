@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_test_task/core/extensions/build_context_extension.dart';
 import 'package:news_test_task/core/widgets/error_snackbar.dart';
 import 'package:news_test_task/core/widgets/news/article_card.dart';
 import 'package:news_test_task/features/favorite_articles/bloc/favorite_articles_cubit.dart';
@@ -29,7 +30,7 @@ class _FavoriteArticlesViewState extends State<FavoriteArticlesView> {
     return BlocListener<FavoriteArticlesCubit, FavoriteArticlesState>(
       listenWhen: (previous, current) => previous.errorEventId != current.errorEventId,
       listener: (context, state) {
-        if (!_isCurrentRoute(context) || state.errorMessage == null) return;
+        if (!context.isCurrentRoute || state.errorMessage == null) return;
         showErrorSnackBar(
           context,
           message: state.errorMessage!,
@@ -100,9 +101,5 @@ class _FavoriteArticlesViewState extends State<FavoriteArticlesView> {
         ),
       ),
     );
-  }
-
-  bool _isCurrentRoute(BuildContext context) {
-    return ModalRoute.of(context)?.isCurrent ?? true;
   }
 }

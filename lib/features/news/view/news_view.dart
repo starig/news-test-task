@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_test_task/core/enums/category_enum.dart';
+import 'package:news_test_task/core/extensions/build_context_extension.dart';
 import 'package:news_test_task/core/extensions/string_extension.dart';
 import 'package:news_test_task/core/theme/colors.dart';
 import 'package:news_test_task/core/widgets/error_snackbar.dart';
@@ -88,7 +89,7 @@ class _NewsViewState extends State<NewsView> {
         BlocListener<NewsCubit, NewsState>(
           listenWhen: (previous, current) => previous.errorEventId != current.errorEventId,
           listener: (context, state) {
-            if (!_isCurrentRoute(context) || state.errorMessage == null) return;
+            if (!context.isCurrentRoute || state.errorMessage == null) return;
             showErrorSnackBar(
               context,
               message: state.errorMessage!,
@@ -98,7 +99,7 @@ class _NewsViewState extends State<NewsView> {
         BlocListener<FavoriteArticlesCubit, FavoriteArticlesState>(
           listenWhen: (previous, current) => previous.errorEventId != current.errorEventId,
           listener: (context, state) {
-            if (!_isCurrentRoute(context) || state.errorMessage == null) return;
+            if (!context.isCurrentRoute || state.errorMessage == null) return;
             showErrorSnackBar(
               context,
               message: state.errorMessage!,
@@ -256,9 +257,5 @@ class _NewsViewState extends State<NewsView> {
         ),
       ),
     );
-  }
-
-  bool _isCurrentRoute(BuildContext context) {
-    return ModalRoute.of(context)?.isCurrent ?? true;
   }
 }
