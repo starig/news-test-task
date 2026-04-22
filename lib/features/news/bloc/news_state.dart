@@ -28,6 +28,7 @@ class NewsState {
     bool? hasMore,
     int? page,
     List<ArticleEntity>? articles,
+    List<String>? favoriteArticlesUrls,
     Object? selectedCategory = _selectedCategorySentinel,
     String? searchQuery,
   }) {

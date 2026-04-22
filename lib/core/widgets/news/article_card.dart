@@ -7,8 +7,9 @@ import 'package:news_test_task/navigation/router.dart';
 
 class ArticleCard extends StatelessWidget {
   final ArticleEntity article;
+  final bool isFavorite;
 
-  const ArticleCard({super.key, required this.article});
+  const ArticleCard({super.key, required this.article, required this.isFavorite});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +101,7 @@ class ArticleCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Assets.icons.favoriteFilled.svg(height: 24),
+                        if (isFavorite) Assets.icons.favoriteFilled.svg(height: 24),
                       ],
                     ),
                     Text(

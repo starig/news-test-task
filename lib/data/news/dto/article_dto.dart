@@ -13,6 +13,8 @@ class ArticleDto {
   final String title;
   @JsonKey(name: "description")
   final String? description;
+  @JsonKey(name: "url")
+  final String url;
   @JsonKey(name: "urlToImage")
   final String? urlToImage;
   @JsonKey(name: "publishedAt")
@@ -25,6 +27,7 @@ class ArticleDto {
     this.author,
     required this.title,
     this.description,
+    required this.url,
     this.urlToImage,
     required this.publishedAt,
     this.content,
@@ -37,6 +40,7 @@ class ArticleDto {
     author: author,
     title: title,
     description: description,
+    url: url,
     urlToImage: urlToImage,
     publishedAt: publishedAt,
     content: content,

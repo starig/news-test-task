@@ -3,12 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:news_test_task/core/widgets/scaffold_with_nested_nav.dart';
 import 'package:news_test_task/domain/news/entities/article_entity.dart';
 import 'package:news_test_task/features/article_details/article_details.dart';
+import 'package:news_test_task/features/favorite_articles/favorite_articles.dart';
 import 'package:news_test_task/features/news/news.dart';
-import 'package:news_test_task/features/news_favorite/news_favorite.dart';
 
 class Routes {
   static const String news = '/news';
-  static const String newsFavorite = '/news-favorite';
+  static const String favoriteArticles = '/favorite-articles';
   static const String newDetails = '/article-details';
 }
 
@@ -37,10 +37,10 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: Routes.newsFavorite,
-              name: Routes.newsFavorite,
+              path: Routes.favoriteArticles,
+              name: Routes.favoriteArticles,
               builder: (context, state) {
-                return const NewsFavorite();
+                return const FavoriteArticles();
               },
             ),
           ],

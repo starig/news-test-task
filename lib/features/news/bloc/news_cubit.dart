@@ -12,8 +12,9 @@ part 'news_state.dart';
 
 @injectable
 class NewsCubit extends Cubit<NewsState> {
-  NewsCubit(this._getTopHeadlinesUseCase)
-    : super(
+  NewsCubit(
+    this._getTopHeadlinesUseCase,
+  ) : super(
         NewsState(
           isLoading: false,
           isLoadingMore: false,

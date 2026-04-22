@@ -8,6 +8,7 @@ import 'package:news_test_task/core/enums/category_enum.dart';
 import 'package:news_test_task/core/extensions/string_extension.dart';
 import 'package:news_test_task/core/theme/colors.dart';
 import 'package:news_test_task/core/widgets/news/article_card.dart';
+import 'package:news_test_task/features/favorite_articles/bloc/favorite_articles_cubit.dart';
 import 'package:news_test_task/features/news/bloc/news_cubit.dart';
 import 'package:news_test_task/gen/assets.gen.dart';
 
@@ -29,7 +30,12 @@ class _NewsViewState extends State<NewsView> {
 
     _searchController = TextEditingController();
     _scrollController = ScrollController()..addListener(_onScroll);
-    unawaited(context.read<NewsCubit>().getTopHeadlines());
+    unawaited(
+      Future.wait([
+        context.read<NewsCubit>().getTopHeadlines(),
+        context.read<FavoriteArticlesCubit>().getFavoriteArticles(),
+      ]),
+    );
   }
 
   @override
@@ -173,7 +179,16 @@ class _NewsViewState extends State<NewsView> {
                       }
 
                       final article = state.articles[index];
-                      return ArticleCard(article: article);
+                      return BlocSelector<FavoriteArticlesCubit, FavoriteArticlesState, List<String>>(
+                        selector: (state) => state.favoriteArticlesUrls,
+                        builder: (context, favoriteUrls) {
+                          final isFavorite = favoriteUrls.contains(article.url);
+                          return ArticleCard(
+                            article: article,
+                            isFavorite: isFavorite,
+                          );
+                        },
+                      );
                     },
                   ),
                 ),

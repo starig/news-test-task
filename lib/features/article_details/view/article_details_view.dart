@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_test_task/domain/news/entities/article_entity.dart';
+import 'package:news_test_task/features/favorite_articles/bloc/favorite_articles_cubit.dart';
 import 'package:news_test_task/gen/assets.gen.dart';
 
 class ArticleDetailsView extends StatefulWidget {
   final ArticleEntity article;
+
   const ArticleDetailsView({super.key, required this.article});
 
   @override
@@ -24,9 +27,21 @@ class _ArticleDetailsViewState extends State<ArticleDetailsView> {
           icon: Assets.icons.arrowLeft.svg(),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Assets.icons.favorite.svg(),
+          BlocBuilder<FavoriteArticlesCubit, FavoriteArticlesState>(
+            buildWhen: (previous, current) => previous.favoriteArticles != current.favoriteArticles,
+            builder: (context, state) {
+              final isFavorite = state.favoriteArticlesUrls.contains(widget.article.url);
+              return IconButton(
+                onPressed: () {
+                  if (isFavorite) {
+                    context.read<FavoriteArticlesCubit>().removeFavoriteArticle(widget.article.url);
+                  } else {
+                    context.read<FavoriteArticlesCubit>().addFavoriteArticle(widget.article);
+                  }
+                },
+                icon: isFavorite ? Assets.icons.favoriteFilled.svg() : Assets.icons.favorite.svg(),
+              );
+            },
           ),
         ],
       ),
@@ -37,13 +52,13 @@ class _ArticleDetailsViewState extends State<ArticleDetailsView> {
             crossAxisAlignment: .stretch,
             children: [
               Text(
-                "Title",
+                widget.article.title,
                 style: theme.textTheme.labelLarge?.copyWith(
                   fontSize: 33,
                 ),
               ),
               Text(
-                "Subtitle",
+                widget.article.description ?? '',
                 style: theme.textTheme.bodyLarge?.copyWith(
                   fontSize: 27,
                 ),
@@ -55,11 +70,11 @@ class _ArticleDetailsViewState extends State<ArticleDetailsView> {
                 mainAxisAlignment: .spaceBetween,
                 children: [
                   Text(
-                    "source",
+                    widget.article.source.name ?? '',
                     style: theme.textTheme.bodyLarge?.copyWith(fontSize: 19),
                   ),
                   Text(
-                    "MM.DD.YYYY",
+                    widget.article.displayTime,
                     style: theme.textTheme.bodyLarge?.copyWith(fontSize: 19),
                   ),
                 ],
@@ -67,23 +82,48 @@ class _ArticleDetailsViewState extends State<ArticleDetailsView> {
               const SizedBox(
                 height: 10,
               ),
-              ClipRRect(
-                borderRadius: .circular(16),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 265,
-                  ),
-                  child: Image.network(
-                    "https://img.freepik.com/free-photo/lavender-field-sunset-near-valensole_268835-3910.jpg?semt=ais_hybrid&w=740&q=80",
-                    fit: .fill,
+              if (widget.article.urlToImage != null)
+                ClipRRect(
+                  borderRadius: .circular(16),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 265,
+                    ),
+                    child: Image.network(
+                      widget.article.urlToImage!,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+
+                        return Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (_, _, _) {
+                        return const Center(
+                          child: Icon(
+                            Icons.image,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
               const SizedBox(
                 height: 18,
               ),
               Text(
-                "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,",
+                widget.article.content ?? '',
                 style: theme.textTheme.bodyLarge?.copyWith(fontSize: 26),
               ),
             ],
