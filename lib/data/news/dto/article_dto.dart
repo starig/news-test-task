@@ -12,9 +12,9 @@ class ArticleDto {
   @JsonKey(name: "title")
   final String title;
   @JsonKey(name: "description")
-  final String description;
+  final String? description;
   @JsonKey(name: "urlToImage")
-  final String urlToImage;
+  final String? urlToImage;
   @JsonKey(name: "publishedAt")
   final String publishedAt;
   @JsonKey(name: "content")
@@ -24,8 +24,8 @@ class ArticleDto {
     required this.source,
     this.author,
     required this.title,
-    required this.description,
-    required this.urlToImage,
+    this.description,
+    this.urlToImage,
     required this.publishedAt,
     this.content,
   });

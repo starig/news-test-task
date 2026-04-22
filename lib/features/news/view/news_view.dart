@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_test_task/core/enums/category_enum.dart';
 import 'package:news_test_task/core/extensions/string_extension.dart';
+import 'package:news_test_task/core/theme/colors.dart';
 import 'package:news_test_task/core/widgets/news/article_card.dart';
 import 'package:news_test_task/features/news/bloc/news_cubit.dart';
 
@@ -78,18 +79,24 @@ class _NewsViewState extends State<NewsView> {
                     separatorBuilder: (_, _) => const SizedBox(width: 7),
                     itemBuilder: (BuildContext context, int index) {
                       final category = CategoryEnum.values[index];
-                      return Container(
-                        padding: .symmetric(horizontal: 25),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          borderRadius: .circular(22),
-                        ),
-                        child: Center(
-                          child: Text(
-                            category.name.capitalizeFirst,
-                            style: theme.textTheme.bodyLarge?.copyWith(
-                              fontSize: 17,
-                              color: theme.colorScheme.onPrimary,
+                      final isSelected = state.selectedCategory == category;
+
+                      return GestureDetector(
+                        onTap: () => context.read<NewsCubit>().selectCategory(category),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          padding: .symmetric(horizontal: 25),
+                          decoration: BoxDecoration(
+                            color: isSelected ? theme.colorScheme.primary : AppColors.grey,
+                            borderRadius: .circular(22),
+                          ),
+                          child: Center(
+                            child: Text(
+                              category.name.capitalizeFirst,
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontSize: 17,
+                                color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface,
+                              ),
                             ),
                           ),
                         ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:news_test_task/core/enums/category_enum.dart';
 import 'package:news_test_task/domain/news/entities/article_entity.dart';
 import 'package:news_test_task/domain/news/entities/top_headlines_entity.dart';
 import 'package:news_test_task/domain/news/use_cases/get_top_headlines_use_case.dart';
@@ -19,6 +20,7 @@ class NewsCubit extends Cubit<NewsState> {
           hasMore: true,
           page: 1,
           articles: [],
+          selectedCategory: null,
         ),
       );
 
@@ -37,7 +39,10 @@ class NewsCubit extends Cubit<NewsState> {
     );
 
     try {
-      final body = TopHeadlinesRequestEntity(page: 1);
+      final body = TopHeadlinesRequestEntity(
+        page: 1,
+        category: state.selectedCategory,
+      );
       final response = await _getTopHeadlinesUseCase(body);
       final hasMore = response.articles.length < response.totalResults && response.articles.isNotEmpty;
 
@@ -46,6 +51,7 @@ class NewsCubit extends Cubit<NewsState> {
           isLoading: false,
           articles: response.articles,
           hasMore: hasMore,
+          page: 1,
         ),
       );
     } catch (e) {
@@ -63,7 +69,10 @@ class NewsCubit extends Cubit<NewsState> {
 
     final nextPage = state.page + 1;
     try {
-      final body = TopHeadlinesRequestEntity(page: nextPage);
+      final body = TopHeadlinesRequestEntity(
+        page: nextPage,
+        category: state.selectedCategory,
+      );
       final response = await _getTopHeadlinesUseCase(body);
 
       final mergedArticles = [...state.articles, ...response.articles];
@@ -83,5 +92,12 @@ class NewsCubit extends Cubit<NewsState> {
         inspect(e);
       }
     }
+  }
+
+  Future<void> selectCategory(CategoryEnum category) async {
+    if (state.selectedCategory == category) return;
+
+    emit(state.copyWith(selectedCategory: category));
+    await getTopHeadlines();
   }
 }

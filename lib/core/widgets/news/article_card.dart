@@ -44,7 +44,7 @@ class ArticleCard extends StatelessWidget {
             SizedBox(
               width: 130,
               child: Image.network(
-                article.urlToImage,
+                article.urlToImage ?? '',
                 height: double.infinity,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
@@ -104,7 +104,7 @@ class ArticleCard extends StatelessWidget {
                       ],
                     ),
                     Text(
-                      article.description,
+                      article.description ?? '',
                       overflow: .ellipsis,
                       maxLines: 2,
                       style: theme.textTheme.bodyLarge?.copyWith(

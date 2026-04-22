@@ -40,6 +40,8 @@ class _ScaffoldWithNestedNavigationState extends State<ScaffoldWithNestedNavigat
                   ),
                   child: Material(
                     color: theme.colorScheme.surface,
+                    elevation: 8,
+                    shadowColor: Colors.black.withValues(alpha: 0.15),
                     borderRadius: .circular(16),
                     clipBehavior: Clip.antiAlias,
                     child: Ink(
