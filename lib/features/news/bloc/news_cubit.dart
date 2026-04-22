@@ -21,13 +21,15 @@ class NewsCubit extends Cubit<NewsState> {
           page: 1,
           articles: [],
           selectedCategory: null,
+          searchQuery: '',
         ),
       );
 
   final GetTopHeadlinesUseCase _getTopHeadlinesUseCase;
+  int _latestTopHeadlinesRequestId = 0;
 
   Future<void> getTopHeadlines() async {
-    if (state.isLoading) return;
+    final requestId = ++_latestTopHeadlinesRequestId;
 
     emit(
       state.copyWith(
@@ -42,8 +44,11 @@ class NewsCubit extends Cubit<NewsState> {
       final body = TopHeadlinesRequestEntity(
         page: 1,
         category: state.selectedCategory,
+        query: state.searchQuery.isEmpty ? null : state.searchQuery,
       );
       final response = await _getTopHeadlinesUseCase(body);
+      if (requestId != _latestTopHeadlinesRequestId) return;
+
       final hasMore = response.articles.length < response.totalResults && response.articles.isNotEmpty;
 
       emit(
@@ -55,6 +60,7 @@ class NewsCubit extends Cubit<NewsState> {
         ),
       );
     } catch (e) {
+      if (requestId != _latestTopHeadlinesRequestId) return;
       emit(state.copyWith(isLoading: false));
       if (kDebugMode) {
         inspect(e);
@@ -72,6 +78,7 @@ class NewsCubit extends Cubit<NewsState> {
       final body = TopHeadlinesRequestEntity(
         page: nextPage,
         category: state.selectedCategory,
+        query: state.searchQuery.isEmpty ? null : state.searchQuery,
       );
       final response = await _getTopHeadlinesUseCase(body);
 
@@ -98,6 +105,14 @@ class NewsCubit extends Cubit<NewsState> {
     if (state.selectedCategory == category) return;
 
     emit(state.copyWith(selectedCategory: category));
+    await getTopHeadlines();
+  }
+
+  Future<void> searchTopHeadlines(String query) async {
+    final normalizedQuery = query.trim();
+    if (state.searchQuery == normalizedQuery) return;
+
+    emit(state.copyWith(searchQuery: normalizedQuery));
     await getTopHeadlines();
   }
 }

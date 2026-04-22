@@ -34,6 +34,9 @@ class $AssetsIconsGen {
   SvgGenImage get newsFavorites =>
       const SvgGenImage('assets/icons/news_favorites.svg');
 
+  /// File path: assets/icons/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/icons/search.svg');
+
   /// List of all assets
   List<SvgGenImage> get values => [
     arrowLeft,
@@ -41,6 +44,7 @@ class $AssetsIconsGen {
     favoriteFilled,
     news,
     newsFavorites,
+    search,
   ];
 }
 

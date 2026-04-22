@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,7 @@ import 'package:news_test_task/core/extensions/string_extension.dart';
 import 'package:news_test_task/core/theme/colors.dart';
 import 'package:news_test_task/core/widgets/news/article_card.dart';
 import 'package:news_test_task/features/news/bloc/news_cubit.dart';
+import 'package:news_test_task/gen/assets.gen.dart';
 
 class NewsView extends StatefulWidget {
   const NewsView({super.key});
@@ -18,17 +20,22 @@ class NewsView extends StatefulWidget {
 
 class _NewsViewState extends State<NewsView> {
   late final ScrollController _scrollController;
+  late final TextEditingController _searchController;
+  Timer? _searchDebounce;
 
   @override
   void initState() {
     super.initState();
 
+    _searchController = TextEditingController();
     _scrollController = ScrollController()..addListener(_onScroll);
     unawaited(context.read<NewsCubit>().getTopHeadlines());
   }
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
@@ -48,11 +55,47 @@ class _NewsViewState extends State<NewsView> {
     }
   }
 
+  void _onSearchChanged(String value) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
+      context.read<NewsCubit>().searchTopHeadlines(value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isSearching = context.select<NewsCubit, bool>(
+      (cubit) => cubit.state.isLoading && cubit.state.searchQuery.isNotEmpty,
+    );
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: "Search...",
+            prefixIconConstraints: BoxConstraints(
+              maxHeight: 28,
+            ),
+            prefixIcon: Assets.icons.search.svg(),
+            suffixIconConstraints: const BoxConstraints(
+              maxHeight: 28,
+            ),
+            suffixIcon: isSearching
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: CupertinoActivityIndicator(),
+                  )
+                : null,
+            border: .none,
+          ),
+          onChanged: _onSearchChanged,
+          onTapOutside: (_) {
+            FocusScope.of(context).unfocus();
+          },
+        ),
+      ),
       body: SafeArea(
         bottom: false,
         child: BlocBuilder<NewsCubit, NewsState>(
@@ -71,10 +114,14 @@ class _NewsViewState extends State<NewsView> {
 
             return Column(
               children: [
+                const SizedBox(
+                  height: 20,
+                ),
                 SizedBox(
                   height: 44,
                   child: ListView.separated(
                     scrollDirection: .horizontal,
+                    padding: .only(left: 16),
                     itemCount: CategoryEnum.values.length,
                     separatorBuilder: (_, _) => const SizedBox(width: 7),
                     itemBuilder: (BuildContext context, int index) {

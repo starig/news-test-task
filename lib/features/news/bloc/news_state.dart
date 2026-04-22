@@ -10,6 +10,7 @@ class NewsState {
   final int page;
   final List<ArticleEntity> articles;
   final CategoryEnum? selectedCategory;
+  final String searchQuery;
 
   const NewsState({
     required this.isLoading,
@@ -18,6 +19,7 @@ class NewsState {
     required this.page,
     required this.articles,
     required this.selectedCategory,
+    required this.searchQuery,
   });
 
   NewsState copyWith({
@@ -27,6 +29,7 @@ class NewsState {
     int? page,
     List<ArticleEntity>? articles,
     Object? selectedCategory = _selectedCategorySentinel,
+    String? searchQuery,
   }) {
     return NewsState(
       isLoading: isLoading ?? this.isLoading,
@@ -37,6 +40,7 @@ class NewsState {
       selectedCategory: identical(selectedCategory, _selectedCategorySentinel)
           ? this.selectedCategory
           : selectedCategory as CategoryEnum?,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }
